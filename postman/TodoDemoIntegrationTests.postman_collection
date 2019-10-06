@@ -1,0 +1,349 @@
+{
+	"info": {
+		"_postman_id": "adbc9d8a-7fa3-4ea2-91c5-e01958a74818",
+		"name": "Todo Demo Integration Tests",
+		"description": "Tests written against the ToDo api: https://github.com/Azure-Samples/dotnet-core-api.\n\nThese tests are intedended to run after the application is deployed.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test Application Init Seeding",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "80971a45-c07b-4512-93be-f79bd9bc5423",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Application init seeds database with incomplete todo\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(1);",
+							"    pm.expect(jsonData[0].isComplete).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{hostName}}/api/todo",
+					"protocol": "http",
+					"host": [
+						"{{hostName}}"
+					],
+					"path": [
+						"api",
+						"todo"
+					]
+				},
+				"description": "App Init is supposed to seed the in memory database with one incomplete todo."
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Todo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e060665b-409b-4a7d-bccc-ca99a3b75f6e",
+						"exec": [
+							"var requestId = Math.floor(Math.random() * 100);",
+							"pm.environment.set(\"newItemId\", requestId);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ce08d7a6-a353-4592-ae54-ba04b490e820",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Created Item has correct values\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
+							"    pm.expect(jsonData.isComplete).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{newItemId}},\r\n  \"name\": \"{{newItemName}}\",\r\n  \"isComplete\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{hostName}}/api/todo",
+					"protocol": "http",
+					"host": [
+						"{{hostName}}"
+					],
+					"path": [
+						"api",
+						"todo"
+					]
+				},
+				"description": "Test Todo Creation"
+			},
+			"response": []
+		},
+		{
+			"name": "Ensure POST was committed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6d8304d-846d-4fa8-aa83-ece44154aefe",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Data was committed correctly\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
+							"    pm.expect(jsonData.isComplete).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"protocol": "http",
+					"host": [
+						"{{hostName}}"
+					],
+					"path": [
+						"api",
+						"todo",
+						"{{newItemId}}"
+					]
+				},
+				"description": "Make sure the POST request was committed to the database"
+			},
+			"response": []
+		},
+		{
+			"name": "Update created item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5b6f1931-5c75-49a4-9ac2-641a00a59606",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{newItemId}},\r\n  \"name\": \"{{newItemName}}\",\r\n  \"isComplete\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"protocol": "http",
+					"host": [
+						"{{hostName}}"
+					],
+					"path": [
+						"api",
+						"todo",
+						"{{newItemId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ensure PUT was committed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6d8304d-846d-4fa8-aa83-ece44154aefe",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Data was committed correctly\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
+							"    pm.expect(jsonData.isComplete).to.eql(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"protocol": "http",
+					"host": [
+						"{{hostName}}"
+					],
+					"path": [
+						"api",
+						"todo",
+						"{{newItemId}}"
+					]
+				},
+				"description": "Make sure the PUT request was committed to the database successfully"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete test item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5b6f1931-5c75-49a4-9ac2-641a00a59606",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"protocol": "http",
+					"host": [
+						"{{hostName}}"
+					],
+					"path": [
+						"api",
+						"todo",
+						"{{newItemId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ensure DELETE was committed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6d8304d-846d-4fa8-aa83-ece44154aefe",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"protocol": "http",
+					"host": [
+						"{{hostName}}"
+					],
+					"path": [
+						"api",
+						"todo",
+						"{{newItemId}}"
+					]
+				},
+				"description": "Make sure the DELETE request was committed to the database successfully"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "81612492-11bb-4042-9442-12a6a2337040",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "13e8b286-61d6-4d16-918f-54cd011e4a05",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

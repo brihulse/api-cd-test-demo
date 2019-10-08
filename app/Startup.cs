@@ -11,8 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
 using TodoApi.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory;
 
 namespace TodoApi
 {
@@ -27,15 +28,12 @@ namespace TodoApi
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDbContext<TodoContext>(opt =>  opt.UseInMemoryDatabase("TodoList"));
+        {      
+            services.AddDbContext<TodoContext>(opt =>  opt.UseInMemoryDatabase("TodoContext"));
 
             services.AddControllers();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Todo Api", Version = "v1" });
-            });
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,12 +44,9 @@ namespace TodoApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c => {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo Api V1");
-            });
-
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+           
             app.UseRouting();
 
             app.UseAuthorization();

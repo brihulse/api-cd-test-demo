@@ -12,6 +12,6 @@
     <PackageReference Include="microsoft.entityframeworkcore" Version="3.0.0" />
     <PackageReference Include="microsoft.entityframeworkcore.inmemory" Version="3.0.0" />
     <PackageReference Include="microsoft.openapi" Version="1.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.1.2" />
   </ItemGroup>
 </Project>

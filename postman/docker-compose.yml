@@ -1,0 +1,11 @@
+version: "2"
+services:
+  postman_tests:
+      build: .
+      image: postman_tests
+      command:
+        run TodoDemoIntegrationTests.postman_collection.json 
+        -e TodoTest-Integration.postman_environment.json
+        -r cli
+      volumes:
+        - ./src:/etc/newman

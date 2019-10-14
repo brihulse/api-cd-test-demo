@@ -57,7 +57,4 @@ stages:
         scriptLocation: 'scriptPath'
         scriptPath: '$(Build.SourcesDirectory)/ps1/run_aci_tests.ps1'
         failOnStandardError: true
-
-      
-
         

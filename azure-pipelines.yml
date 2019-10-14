@@ -38,7 +38,7 @@ stages:
     steps:
     - task: AzureCLI@2
       inputs:
-        azureSubscription: 'Free Trial'
+        azureSubscription: 'Free Trial(1a11cb2d-d5b0-4863-b078-3e4840403fea)'
         scriptType: 'ps'
         scriptLocation: 'inlineScript'
-        inlineScript: 'az container create --resource-group todo-api-demo-rg --name demo-container --image docker.io/brihulse/rp-todo-demo --dns-name-label rp-todo-demo --ports 80 --location centralus'
+        inlineScript: 'az container create --resource-group todo-api-demo-rg --name demo-container --image docker.io/brihulse/rp-todo-demo --dns-name-label rp-todo-api-demo --ports 80 --location centralus'

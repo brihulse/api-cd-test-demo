@@ -30,3 +30,15 @@ stages:
         tags: |
           $(tag)
           latest
+- stage: Deploy
+  displayName: Deploy to Azure Container Instance
+  jobs:
+  - job: Deploy
+    displayName: Deploy container as ACI
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Free Trial'
+        scriptType: 'ps'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az container create --resource-group todo-api-demo-rg --name demo-container --image docker.io/brihulse/rp-todo-demo --dns-name-label rp-todo-demo --ports 80 --location centralus'

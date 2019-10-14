@@ -13,7 +13,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build and push image
+  displayName: Build and push images
   jobs:  
   - job: Build
     displayName: Build
@@ -21,7 +21,7 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build and Push image
+      displayName: Build and Push image for api
       inputs:
         containerRegistry: 'docker-hub-connection'
         repository: 'brihulse/rp-todo-demo'
@@ -37,9 +37,24 @@ stages:
     displayName: Deploy container as ACI
     steps:
     - task: AzureCLI@2
+
       inputs:
         azureSubscription: 'Free Trial(1a11cb2d-d5b0-4863-b078-3e4840403fea)'
         scriptType: 'pscore'
-        scriptLocation: 'inlineScript'
-        inlineScript: 'az container create --resource-group todo-api-demo-rg --name demo-container --image docker.io/brihulse/rp-todo-demo --dns-name-label rp-todo-api-demo --ports 80 --location centralus'
+        scriptLocation: 'scriptPath'
+        scriptPath: '$(Build.SourcesDirectory)/ps1/create_api_aci.ps1'
+        failOnStandardError: true
+- stage: Test
+  displayName: Run tests in Azure Container Instance
+  jobs:
+  - job: Test
+    displayName: Test in ACI
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Free Trial(1a11cb2d-d5b0-4863-b078-3e4840403fea)'
+        scriptType: 'pscore'
+        scriptLocation: 'scriptPath'
+        scriptPath: '$(Build.SourcesDirectory)/ps1/run_aci_tests.ps1'
+        failOnStandardError: true
         

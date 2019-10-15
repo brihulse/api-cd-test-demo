@@ -30,6 +30,16 @@ stages:
         tags: |
           $(tag)
           latest
+    - task: Docker@2
+      displayName: Build and Push image for test runner container
+      inputs:
+        containerRegistry: 'docker-hub-connection'
+        repository: 'brihulse/rp-todo-demo-postman-runner'
+        command: 'buildAndPush'
+        Dockerfile: '$(Build.SourcesDirectory)/postman/Dockerfile'
+        tags: |
+          $(tag)
+          latest
 - stage: Deploy
   displayName: Deploy to Azure Container Instance
   jobs:
@@ -37,7 +47,6 @@ stages:
     displayName: Deploy container as ACI
     steps:
     - task: AzureCLI@2
-
       inputs:
         azureSubscription: 'Free Trial(1a11cb2d-d5b0-4863-b078-3e4840403fea)'
         scriptType: 'pscore'

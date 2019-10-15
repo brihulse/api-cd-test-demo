@@ -32,10 +32,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{hostName}}/api/todo",
+					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo",
 					"protocol": "http",
 					"host": [
-						"{{hostName}}"
+						"rp-todo-api-demo",
+						"centralus",
+						"azurecontainer",
+						"io"
 					],
 					"path": [
 						"api",
@@ -54,9 +57,6 @@
 					"script": {
 						"id": "e060665b-409b-4a7d-bccc-ca99a3b75f6e",
 						"exec": [
-							"var requestId = Math.floor(Math.random() * 100) + 2;",
-							"pm.environment.set(\"newItemId\", requestId);",
-							"",
 							""
 						],
 						"type": "text/javascript"
@@ -73,8 +73,8 @@
 							"",
 							"pm.test(\"Created Item has correct values\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
-							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
+							"    pm.expect(jsonData.id).to.eql(99);",
+							"    pm.expect(jsonData.name).to.eql(\"item 99\");",
 							"    pm.expect(jsonData.isComplete).to.eql(false);",
 							"});"
 						],
@@ -94,7 +94,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"id\": {{newItemId}},\r\n  \"name\": \"{{newItemName}}\",\r\n  \"isComplete\": false\r\n}",
+					"raw": "{\r\n  \"id\": 99,\r\n  \"name\": \"item 99\",\r\n  \"isComplete\": false\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -102,10 +102,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{hostName}}/api/todo",
+					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo",
 					"protocol": "http",
 					"host": [
-						"{{hostName}}"
+						"rp-todo-api-demo",
+						"centralus",
+						"azurecontainer",
+						"io"
 					],
 					"path": [
 						"api",
@@ -131,8 +134,8 @@
 							"",
 							"pm.test(\"Data was committed correctly\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
-							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
+							"    pm.expect(jsonData.id).to.eql(99);",
+							"    pm.expect(jsonData.name).to.eql(\"item 99\");",
 							"    pm.expect(jsonData.isComplete).to.eql(false);",
 							"});"
 						],
@@ -144,15 +147,18 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/99",
 					"protocol": "http",
 					"host": [
-						"{{hostName}}"
+						"rp-todo-api-demo",
+						"centralus",
+						"azurecontainer",
+						"io"
 					],
 					"path": [
 						"api",
 						"todo",
-						"{{newItemId}}"
+						"99"
 					]
 				},
 				"description": "Make sure the POST request was committed to the database"
@@ -187,7 +193,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"id\": {{newItemId}},\r\n  \"name\": \"{{newItemName}}\",\r\n  \"isComplete\": true\r\n}",
+					"raw": "{\r\n  \"id\": 99,\r\n  \"name\": \"item 99\",\r\n  \"isComplete\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -195,15 +201,18 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/99",
 					"protocol": "http",
 					"host": [
-						"{{hostName}}"
+						"rp-todo-api-demo",
+						"centralus",
+						"azurecontainer",
+						"io"
 					],
 					"path": [
 						"api",
 						"todo",
-						"{{newItemId}}"
+						"99"
 					]
 				}
 			},
@@ -224,8 +233,8 @@
 							"",
 							"pm.test(\"Data was committed correctly\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
-							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
+							"    pm.expect(jsonData.id).to.eql(99);",
+							"    pm.expect(jsonData.name).to.eql(\"item 99\");",
 							"    pm.expect(jsonData.isComplete).to.eql(true);",
 							"});"
 						],
@@ -237,10 +246,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/{{newItemId}}",
 					"protocol": "http",
 					"host": [
-						"{{hostName}}"
+						"rp-todo-api-demo",
+						"centralus",
+						"azurecontainer",
+						"io"
 					],
 					"path": [
 						"api",
@@ -272,15 +284,18 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/99",
 					"protocol": "http",
 					"host": [
-						"{{hostName}}"
+						"rp-todo-api-demo",
+						"centralus",
+						"azurecontainer",
+						"io"
 					],
 					"path": [
 						"api",
 						"todo",
-						"{{newItemId}}"
+						"99"
 					]
 				}
 			},
@@ -307,15 +322,18 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
+					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/99",
 					"protocol": "http",
 					"host": [
-						"{{hostName}}"
+						"rp-todo-api-demo",
+						"centralus",
+						"azurecontainer",
+						"io"
 					],
 					"path": [
 						"api",
 						"todo",
-						"{{newItemId}}"
+						"99"
 					]
 				},
 				"description": "Make sure the DELETE request was committed to the database successfully"

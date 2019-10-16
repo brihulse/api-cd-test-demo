@@ -37,3 +37,10 @@ The process we're implementing is kicked off by updating the master branch in yo
 5. Get the results from the test run
 
 ![alt text](https://raw.githubusercontent.com/brihulse/api-cd-test-demo/master/images/bndprocess.PNG "The Process")
+
+## Improvements
+
+How can you take this to the next level?
+- Package your postman test source and environment variable set with your container image (good for private collections and using different variables for testing in different environments)
+- Generate pretty html reports and post them somewhere your stakeholders can access. see: https://www.npmjs.com/package/newman-reporter-htmlextra
+- Create a multi-staged pipeline for staging/production deployments and gate them based on test results

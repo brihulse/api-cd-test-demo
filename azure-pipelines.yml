@@ -66,17 +66,3 @@ stages:
         scriptLocation: 'scriptPath'
         scriptPath: '$(Build.SourcesDirectory)/ps1/run_aci_tests.ps1'
         failOnStandardError: true
-- stage: Teardown
-  displayName: Teardown containers
-  jobs:
-  - job: Run teardown script
-    displayName: Run teardown script
-    steps:
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'Free Trial(1a11cb2d-d5b0-4863-b078-3e4840403fea)'
-        scriptType: 'pscore'
-        scriptLocation: 'scriptPath'
-        scriptPath: '$(Build.SourcesDirectory)/ps1/teardown.ps1'
-        failOnStandardError: true
-        

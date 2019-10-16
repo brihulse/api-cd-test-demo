@@ -36,5 +36,4 @@ The process we're implementing is kicked off by updating the master branch in yo
 4. Use the latest container image from your dockerhub api tester repo to deploy your newman testing application using Azure Container Instances. When this container starts it will execute tests against the instance of the api that was just deployed.
 5. Get the results from the test run
 
-![alt text](https://github.com/brihulse/api-cd-test-demo/raw/master/images/bndprocess.png "The Process")
-
+![alt text](https://raw.githubusercontent.com/brihulse/api-cd-test-demo/master/images/bndprocess.PNG "The Process")

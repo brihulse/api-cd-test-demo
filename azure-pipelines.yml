@@ -22,7 +22,6 @@ stages:
     steps:
     - task: Docker@2
       displayName: Build and Push image for api
-      enabled: false
       inputs:
         containerRegistry: 'docker-hub-connection'
         repository: 'brihulse/rp-todo-demo'
@@ -33,7 +32,6 @@ stages:
           latest
     - task: Docker@2
       displayName: Build and Push image for test runner container
-      enabled: false
       inputs:
         containerRegistry: 'docker-hub-connection'
         repository: 'brihulse/rp-todo-demo-postman-runner'

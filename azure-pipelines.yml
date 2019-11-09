@@ -40,13 +40,8 @@ stages:
         tags: |
           $(tag)
           latest
-- state: Publish
-  displayName: Publish source
-  jobs:
-  - job: Publish
-    displayName: Publish Build Artifacts
-    steps
     - task: PublishBuildArtifacts@1
+      displayName: Publish Build Artifacts
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/ps1'
         ArtifactName: 'drop'

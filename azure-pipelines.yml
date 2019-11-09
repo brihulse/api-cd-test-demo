@@ -40,29 +40,14 @@ stages:
         tags: |
           $(tag)
           latest
-- stage: Deploy
-  displayName: Deploy to Azure Container Instance
+- state: Publish
+  displayName: Publish source
   jobs:
-  - job: Deploy
-    displayName: Deploy container as ACI
-    steps:
-    - task: AzureCLI@2
+  - job: Publish
+    displayName: Publish Build Artifacts
+    steps
+    - task: PublishBuildArtifacts@1
       inputs:
-        azureSubscription: 'Free Trial(1a11cb2d-d5b0-4863-b078-3e4840403fea)'
-        scriptType: 'pscore'
-        scriptLocation: 'scriptPath'
-        scriptPath: '$(Build.SourcesDirectory)/ps1/create_api_aci.ps1'
-        failOnStandardError: true
-- stage: Test
-  displayName: Run tests in Azure Container Instance
-  jobs:
-  - job: Test
-    displayName: Test in ACI
-    steps:
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'Free Trial(1a11cb2d-d5b0-4863-b078-3e4840403fea)'
-        scriptType: 'pscore'
-        scriptLocation: 'scriptPath'
-        scriptPath: '$(Build.SourcesDirectory)/ps1/run_aci_tests.ps1'
-        failOnStandardError: true
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/ps1'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'

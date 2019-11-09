@@ -32,6 +32,7 @@ stages:
           latest
     - task: Docker@2
       displayName: Build and Push image for test runner container
+      enabled: false
       inputs:
         containerRegistry: 'docker-hub-connection'
         repository: 'brihulse/rp-todo-demo-postman-runner'
@@ -40,9 +41,21 @@ stages:
         tags: |
           $(tag)
           latest
+    - task: CopyFiles@2
+      displayName: Publish powershell to build artifacts
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)/ps1'
+        Contents: '**'
+        TargetFolder: '$(build.artifactstagingdirectory)/publish/ps1'
+    - task: CopyFiles@2
+      displayName: Publish postman src to build artifacts
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)/postman/src'
+        Contents: '**'
+        TargetFolder: '$(build.artifactstagingdirectory)/publish/postman'
     - task: PublishBuildArtifacts@1
       displayName: Publish Build Artifacts
       inputs:
-        PathtoPublish: '$(Build.SourcesDirectory)/ps1'
+        PathtoPublish: '$(Build.SourcesDirectory)/publish'
         ArtifactName: 'drop'
         publishLocation: 'Container'

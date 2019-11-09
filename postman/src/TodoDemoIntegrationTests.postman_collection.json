@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "adbc9d8a-7fa3-4ea2-91c5-e01958a74818",
-		"name": "Todo Demo Integration Tests",
+		"_postman_id": "5102e4bd-5ad6-4bf9-bd44-14ae9584a287",
+		"name": "Todo Demo Integration Tests - Deploy",
 		"description": "Tests written against the ToDo api: https://github.com/Azure-Samples/dotnet-core-api.\n\nThese tests are intedended to run after the application is deployed.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 					"script": {
 						"id": "80971a45-c07b-4512-93be-f79bd9bc5423",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Get call status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
@@ -32,13 +32,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo",
+					"raw": "http://{{hostName}}/api/todo",
 					"protocol": "http",
 					"host": [
-						"rp-todo-api-demo",
-						"centralus",
-						"azurecontainer",
-						"io"
+						"{{hostName}}"
 					],
 					"path": [
 						"api",
@@ -57,6 +54,9 @@
 					"script": {
 						"id": "e060665b-409b-4a7d-bccc-ca99a3b75f6e",
 						"exec": [
+							"var requestId = Math.floor(Math.random() * 100);",
+							"pm.environment.set(\"newItemId\", requestId);",
+							"",
 							""
 						],
 						"type": "text/javascript"
@@ -67,14 +67,14 @@
 					"script": {
 						"id": "ce08d7a6-a353-4592-ae54-ba04b490e820",
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
+							"pm.test(\"Post status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
 							"});",
 							"",
 							"pm.test(\"Created Item has correct values\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.eql(99);",
-							"    pm.expect(jsonData.name).to.eql(\"item 99\");",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
 							"    pm.expect(jsonData.isComplete).to.eql(false);",
 							"});"
 						],
@@ -94,7 +94,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"id\": 99,\r\n  \"name\": \"item 99\",\r\n  \"isComplete\": false\r\n}",
+					"raw": "{\r\n  \"id\": {{newItemId}},\r\n  \"name\": \"{{newItemName}}\",\r\n  \"isComplete\": false\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -102,13 +102,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo",
+					"raw": "http://{{hostName}}/api/todo",
 					"protocol": "http",
 					"host": [
-						"rp-todo-api-demo",
-						"centralus",
-						"azurecontainer",
-						"io"
+						"{{hostName}}"
 					],
 					"path": [
 						"api",
@@ -127,15 +124,15 @@
 					"script": {
 						"id": "a6d8304d-846d-4fa8-aa83-ece44154aefe",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Get new item call status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
 							"",
 							"pm.test(\"Data was committed correctly\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.eql(99);",
-							"    pm.expect(jsonData.name).to.eql(\"item 99\");",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
 							"    pm.expect(jsonData.isComplete).to.eql(false);",
 							"});"
 						],
@@ -147,18 +144,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/99",
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
 					"protocol": "http",
 					"host": [
-						"rp-todo-api-demo",
-						"centralus",
-						"azurecontainer",
-						"io"
+						"{{hostName}}"
 					],
 					"path": [
 						"api",
 						"todo",
-						"99"
+						"{{newItemId}}"
 					]
 				},
 				"description": "Make sure the POST request was committed to the database"
@@ -173,7 +167,7 @@
 					"script": {
 						"id": "5b6f1931-5c75-49a4-9ac2-641a00a59606",
 						"exec": [
-							"pm.test(\"Status code is 204\", function () {",
+							"pm.test(\"Update created item status code is 204\", function () {",
 							"    pm.response.to.have.status(204);",
 							"});"
 						],
@@ -193,7 +187,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"id\": 99,\r\n  \"name\": \"item 99\",\r\n  \"isComplete\": true\r\n}",
+					"raw": "{\r\n  \"id\": {{newItemId}},\r\n  \"name\": \"{{newItemName}}\",\r\n  \"isComplete\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -201,18 +195,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/99",
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
 					"protocol": "http",
 					"host": [
-						"rp-todo-api-demo",
-						"centralus",
-						"azurecontainer",
-						"io"
+						"{{hostName}}"
 					],
 					"path": [
 						"api",
 						"todo",
-						"99"
+						"{{newItemId}}"
 					]
 				}
 			},
@@ -226,15 +217,15 @@
 					"script": {
 						"id": "a6d8304d-846d-4fa8-aa83-ece44154aefe",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Put call status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
 							"",
 							"pm.test(\"Data was committed correctly\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.eql(99);",
-							"    pm.expect(jsonData.name).to.eql(\"item 99\");",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"newItemId\"));",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newItemName\"));",
 							"    pm.expect(jsonData.isComplete).to.eql(true);",
 							"});"
 						],
@@ -246,13 +237,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/{{newItemId}}",
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
 					"protocol": "http",
 					"host": [
-						"rp-todo-api-demo",
-						"centralus",
-						"azurecontainer",
-						"io"
+						"{{hostName}}"
 					],
 					"path": [
 						"api",
@@ -272,7 +260,7 @@
 					"script": {
 						"id": "5b6f1931-5c75-49a4-9ac2-641a00a59606",
 						"exec": [
-							"pm.test(\"Status code is 204\", function () {",
+							"pm.test(\"Delete call status code is 204\", function () {",
 							"    pm.response.to.have.status(204);",
 							"});"
 						],
@@ -284,18 +272,15 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/99",
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
 					"protocol": "http",
 					"host": [
-						"rp-todo-api-demo",
-						"centralus",
-						"azurecontainer",
-						"io"
+						"{{hostName}}"
 					],
 					"path": [
 						"api",
 						"todo",
-						"99"
+						"{{newItemId}}"
 					]
 				}
 			},
@@ -309,7 +294,7 @@
 					"script": {
 						"id": "a6d8304d-846d-4fa8-aa83-ece44154aefe",
 						"exec": [
-							"pm.test(\"Status code is 404\", function () {",
+							"pm.test(\"Item was successfully deleted\", function () {",
 							"    pm.response.to.have.status(404);",
 							"});",
 							""
@@ -322,18 +307,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://rp-todo-api-demo.centralus.azurecontainer.io/api/todo/99",
+					"raw": "http://{{hostName}}/api/todo/{{newItemId}}",
 					"protocol": "http",
 					"host": [
-						"rp-todo-api-demo",
-						"centralus",
-						"azurecontainer",
-						"io"
+						"{{hostName}}"
 					],
 					"path": [
 						"api",
 						"todo",
-						"99"
+						"{{newItemId}}"
 					]
 				},
 				"description": "Make sure the DELETE request was committed to the database successfully"

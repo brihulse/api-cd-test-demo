@@ -295,7 +295,7 @@
 						"id": "a6d8304d-846d-4fa8-aa83-ece44154aefe",
 						"exec": [
 							"pm.test(\"Item was successfully deleted\", function () {",
-							"    pm.response.to.have.status(404);",
+							"    pm.response.to.have.status(200);",
 							"});",
 							""
 						],
